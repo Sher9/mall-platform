@@ -1,0 +1,30 @@
+{
+  "name": "mall-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@element-plus/nuxt": "^1.0.5",
+    "@nuxtjs/tailwindcss": "^6.13.2",
+    "@pinia/nuxt": "^0.10.1",
+    "@vueuse/core": "^13.0.0",
+    "dayjs": "^1.11.13",
+    "element-plus": "^2.9.7",
+    "nuxt": "^3.17.4",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/proxy": "^2.1.0",
+    "@types/node": "^22.14.0",
+    "sass": "^1.86.0",
+    "typescript": "^5.8.3"
+  }
+}

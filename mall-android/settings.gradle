@@ -1,0 +1,33 @@
+// 项目设置 - 包含所有的模块
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+rootProject.name = "mall-android"
+
+// 主 App 壳工程
+include ':app'
+
+// 基础层模块
+include ':base'
+
+// 业务模块
+include ':module_user'
+include ':module_home'
+include ':module_product'
+include ':module_cart'
+include ':module_order'
+include ':module_pay'

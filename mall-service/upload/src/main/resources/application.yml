@@ -1,0 +1,24 @@
+server:
+  port: 8003
+
+spring:
+  application:
+    name: cloud-upload
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+file:
+  upload-dir: D:/code/mall-platform/mall-service/uploads
+  access-url: http://localhost:8000/files
+  max-size: 10MB
+  allowed-types:
+    - image/jpeg
+    - image/png
+    - image/gif
+    - image/webp
+
+logging:
+  level:
+    com.example.upload: debug

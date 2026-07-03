@@ -1,0 +1,60 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: cloud-order
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8719
+    seata:
+      enabled: true
+      tx-service-group: default_tx_group
+      registry:
+        type: nacos
+        nacos:
+          server-addr: 127.0.0.1:8848
+          namespace: public
+          group: SEATA_GROUP
+      config:
+        type: nacos
+        nacos:
+          server-addr: 127.0.0.1:8848
+          namespace: public
+          group: SEATA_GROUP
+
+seata:
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+    grouplist:
+      default: 127.0.0.1:8091
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
+rocketmq:
+  enabled: false
+  name-server: 127.0.0.1:9876
+  producer:
+    group: order-producer-group
+
+logging:
+  level:
+    com.example.order: DEBUG
+    io.seata: INFO

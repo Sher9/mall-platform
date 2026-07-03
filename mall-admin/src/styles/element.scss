@@ -1,0 +1,16 @@
+@use './variables.scss' as *;
+
+.search-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-lg;
+  padding: $spacing-lg $spacing-xl;
+  background: $bg-white;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-lg;
+
+  .el-form-item {
+    margin-bottom: 0;
+    width: 24%;
+  }
+}

@@ -1,0 +1,179 @@
+// Prisma Schema for Nest Service
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 管理员用户表
+model AdminUser {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique @map("username")
+  password      String   @map("password")
+  nickname      String?  @map("nickname")
+  avatar        String?  @map("avatar")
+  phone         String?  @map("phone")
+  email         String?  @map("email")
+  status        Int      @default(1) @map("status")
+  lastLoginTime DateTime? @map("last_login_time")
+  lastLoginIp   String?  @map("last_login_ip")
+  createTime    DateTime @default(now()) @map("create_time")
+  updateTime    DateTime @updatedAt @map("update_time")
+
+  @@map("admin_user")
+}
+
+// 客户表
+model Customer {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique @map("username")
+  password      String   @map("password")
+  nickname      String?  @map("nickname")
+  avatar        String?  @map("avatar")
+  phone         String?  @map("phone")
+  email         String?  @map("email")
+  gender        Int      @default(0) @map("gender")
+  birthday      DateTime? @map("birthday")
+  status        Int      @default(1) @map("status")
+  lastLoginTime DateTime? @map("last_login_time")
+  lastLoginIp   String?  @map("last_login_ip")
+  registerTime  DateTime? @map("register_time")
+  createTime    DateTime @default(now()) @map("create_time")
+  updateTime    DateTime @updatedAt @map("update_time")
+
+  @@map("customer")
+}
+
+// 商品表
+model Product {
+  id            Int      @id @default(autoincrement())
+  productNo     String   @unique @map("product_no")
+  productName   String   @map("product_name")
+  categoryId    Int      @map("category_id")
+  price         Int      @map("price")
+  originalPrice Int?     @map("original_price")
+  stock         Int      @default(0) @map("stock")
+  image         String?  @map("image")
+  images        String?  @map("images")
+  description   String?  @map("description")
+  detail        String?  @map("detail")
+  status        Int      @default(0) @map("status")
+  sales         Int      @default(0) @map("sales")
+  createTime    DateTime @default(now()) @map("create_time")
+  updateTime    DateTime @updatedAt @map("update_time")
+
+  @@map("product")
+}
+
+// 轮播图表
+model Banner {
+  id        Int      @id @default(autoincrement())
+  title     String?  @map("title")
+  imageUrl  String   @map("image_url")
+  linkUrl   String?  @map("link_url")
+  sort      Int      @default(0) @map("sort")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("banner")
+}
+
+// 收货地址表
+model Address {
+  id          Int      @id @default(autoincrement())
+  customerId  Int      @map("customer_id")
+  name        String   @map("name")
+  phone       String   @map("phone")
+  province    String   @map("province")
+  city        String   @map("city")
+  district    String   @map("district")
+  detail      String   @map("detail")
+  isDefault   Boolean  @default(false) @map("is_default")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("address")
+}
+
+// 订单表
+model Order {
+  id          Int        @id @default(autoincrement())
+  orderNo     String     @unique @map("order_no")
+  customerId  Int        @map("customer_id")
+  totalAmount Int        @map("total_amount")
+  status      Int        @default(0) @map("status")
+  address     String?    @map("address")
+  payTime     DateTime?  @map("pay_time")
+  shipTime    DateTime?  @map("ship_time")
+  confirmTime DateTime?  @map("confirm_time")
+  createTime  DateTime   @default(now()) @map("create_time")
+  updateTime  DateTime   @updatedAt @map("update_time")
+  items       OrderItem[]
+
+  @@map("order")
+}
+
+// 订单明细表
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  orderId   Int    @map("order_id")
+  productId Int    @map("product_id")
+  productName String? @map("product_name")
+  productImage String? @map("product_image")
+  price     Int    @map("price")
+  quantity  Int    @map("quantity")
+  order     Order  @relation(fields: [orderId], references: [id])
+
+  @@map("order_item")
+}
+
+// 购物车表
+model CartItem {
+  id           Int      @id @default(autoincrement())
+  customerId   Int      @map("customer_id")
+  productId    Int      @map("product_id")
+  skuId        Int?     @map("sku_id")
+  productName  String?  @map("product_name")
+  productImage String?  @map("product_image")
+  skuSpec      String?  @map("sku_spec")
+  price        Int      @default(0) @map("price")
+  quantity     Int      @default(1) @map("quantity")
+  selected     Boolean  @default(true) @map("selected")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("cart_item")
+}
+
+// 支付订单表
+model PayOrder {
+  id            Int      @id @default(autoincrement())
+  payNo         String   @unique @map("pay_no")
+  orderNo       String   @map("order_no")
+  customerId    Int      @map("customer_id")
+  amount        Int      @map("amount")
+  payType       Int      @default(1) @map("pay_type")
+  status        Int      @default(0) @map("status")
+  transactionId String?  @map("transaction_id")
+  payTime       DateTime? @map("pay_time")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("pay_order")
+}
+
+// 库存表
+model Stock {
+  id          Int      @id @default(autoincrement())
+  productId   Int      @unique @map("product_id")
+  quantity    Int      @default(0) @map("quantity")
+  locked      Int      @default(0) @map("locked")
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  @@map("stock")
+}

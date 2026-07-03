@@ -1,0 +1,42 @@
+// 全局 SCSS 变量（使用现代 Sass 模块系统）
+// 这些变量可以通过 @use 导入并在 Sass 中使用
+
+$primary-color: #1989FA;
+$primary-light: #ecf5ff;
+$success-color: #07C160;
+$danger-color: #EE0A24;
+$waring-color: #FF976A;
+$text-color: #323233;
+$text-color-secondary: #646566;
+$text-color-light: #969799;
+$border-color: #ebedf0;
+$bg-color: #f7f8fa;
+$bg-color-white: #ffffff;
+$font-size-xs: 20rpx;
+$font-size-sm: 24rpx;
+$font-size-md: 28rpx;
+$font-size-lg: 32rpx;
+$font-size-xl: 40rpx;
+$font-size-xxl: 56rpx;
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
+$border-radius: 8rpx;
+$border-radius-lg: 16rpx;
+$shadow: 0 2rpx 12rpx rgba(50, 50, 51, 0.12);
+$shadow-lg: 0 8rpx 24rpx rgba(50, 50, 51, 0.16);
+
+// 混合器
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,15 +1,21 @@
 <template>
   <div class="cart">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">购物车</h1>
+        <p class="page-desc">管理待结算的商品清单。</p>
+      </div>
+    </div>
+
     <div class="card">
-      <h2>购物车</h2>
-      <table v-if="cartStore.items.length > 0">
+      <table v-if="cartStore.items.length > 0" class="data-table">
         <thead>
           <tr>
             <th>商品名称</th>
             <th>单价</th>
             <th>数量</th>
             <th>小计</th>
-            <th>操作</th>
+            <th class="col-action">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -24,8 +30,8 @@
               </div>
             </td>
             <td>¥{{ (item.price * item.quantity).toFixed(2) }}</td>
-            <td>
-              <button class="btn-danger btn-sm" @click="cartStore.removeItem(item.productId)">移除</button>
+            <td class="col-action">
+              <button class="btn-link danger" @click="cartStore.removeItem(item.productId)">移除</button>
             </td>
           </tr>
         </tbody>
@@ -73,29 +79,8 @@ async function handleCheckout() {
 
 <style lang="scss" scoped>
 .cart {
-  h2 {
-    margin-bottom: 16px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid $border-color;
-    }
-
-    th {
-      background: $bg-color;
-      font-weight: 600;
-      color: $text-color-secondary;
-    }
-  }
-
   .qty-control {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 
@@ -107,7 +92,7 @@ async function handleCheckout() {
 
   .empty {
     text-align: center;
-    padding: 40px;
+    padding: 48px;
     color: $text-color-placeholder;
   }
 
@@ -120,12 +105,14 @@ async function handleCheckout() {
     border-top: 1px solid $border-color;
 
     .total {
-      font-size: 16px;
+      font-size: 14px;
+      color: $text-color-secondary;
 
       .price {
         color: $danger-color;
         font-size: 20px;
         font-weight: 700;
+        margin-left: 4px;
       }
     }
 
@@ -133,11 +120,6 @@ async function handleCheckout() {
       display: flex;
       gap: 12px;
     }
-  }
-
-  .btn-sm {
-    padding: 2px 10px;
-    font-size: 12px;
   }
 }
 </style>

@@ -57,6 +57,7 @@ const router = createRouter({
   routes
 })
 
+// 路由守卫：未登录访问受保护页面时强制跳转登录页
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (to.path !== '/login' && !token) {

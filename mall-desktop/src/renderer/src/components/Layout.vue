@@ -1,23 +1,42 @@
 <template>
   <div class="layout">
     <aside class="sidebar">
-      <div class="logo">商城管理</div>
+      <div class="logo">
+        <span class="logo-mark">商城</span>
+        <span class="logo-text">管理控制台</span>
+      </div>
       <nav class="menu">
-        <router-link to="/home" class="menu-item" active-class="active">首页</router-link>
-        <router-link to="/products" class="menu-item" active-class="active">商品管理</router-link>
-        <router-link to="/customers" class="menu-item" active-class="active">客户管理</router-link>
-        <router-link to="/orders" class="menu-item" active-class="active">订单管理</router-link>
-        <router-link to="/cart" class="menu-item" active-class="active">购物车</router-link>
+        <router-link to="/home" class="menu-item" active-class="active">
+          <span class="dot"></span>首页
+        </router-link>
+        <router-link to="/products" class="menu-item" active-class="active">
+          <span class="dot"></span>商品管理
+        </router-link>
+        <router-link to="/customers" class="menu-item" active-class="active">
+          <span class="dot"></span>客户管理
+        </router-link>
+        <router-link to="/orders" class="menu-item" active-class="active">
+          <span class="dot"></span>订单管理
+        </router-link>
+        <router-link to="/cart" class="menu-item" active-class="active">
+          <span class="dot"></span>购物车
+        </router-link>
       </nav>
     </aside>
+
     <div class="main">
       <header class="header">
         <span class="title">{{ $route.meta.title }}</span>
         <div class="user-area">
-          <span class="username">{{ userStore.userInfo?.username || '管理员' }}</span>
-          <button class="btn-default" @click="handleLogout">退出</button>
+          <template v-if="userStore.isLoggedIn">
+            <span class="avatar">{{ avatarText }}</span>
+            <span class="username">{{ userStore.userInfo?.nickname || userStore.userInfo?.username || '管理员' }}</span>
+            <button class="btn-default logout-btn" @click="handleLogout">退出</button>
+          </template>
+          <button v-else class="btn-primary login-btn" @click="goLogin">登录</button>
         </div>
       </header>
+
       <main class="content">
         <router-view />
       </main>
@@ -26,11 +45,22 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { computed } from 'vue'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+
+const avatarText = computed(() => {
+  const name = userStore.userInfo?.nickname || userStore.userInfo?.username || '管'
+  return name.charAt(0)
+})
+
+function goLogin() {
+  router.push({ path: '/login', query: { redirect: route.fullPath } })
+}
 
 async function handleLogout() {
   await userStore.logout()
@@ -45,7 +75,8 @@ async function handleLogout() {
 
   .sidebar {
     width: $sidebar-width;
-    background: #1d2129;
+    background: $bg-color-light;
+    border-right: 1px solid $border-color;
     display: flex;
     flex-direction: column;
 
@@ -53,31 +84,63 @@ async function handleLogout() {
       height: $header-height;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 600;
+      gap: 10px;
+      padding: 0 20px;
+      border-bottom: 1px solid $border-color;
+
+      .logo-mark {
+        padding: 4px 8px;
+        background: $primary-color;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: $radius-sm;
+        letter-spacing: 1px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+        font-weight: 600;
+        color: $text-color;
+      }
     }
 
     .menu {
       flex: 1;
-      padding: 8px 0;
+      padding: 12px 12px;
 
       .menu-item {
-        display: block;
-        padding: 12px 24px;
-        color: #c9cdd4;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+        padding: 10px 14px;
+        color: $text-color-secondary;
         font-size: 14px;
+        border-radius: $radius-sm;
         transition: all 0.2s;
 
+        .dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: transparent;
+          transition: all 0.2s;
+        }
+
         &:hover {
-          color: #fff;
-          background: rgba(255, 255, 255, 0.08);
+          background: $bg-color;
+          color: $text-color;
         }
 
         &.active {
-          color: #fff;
-          background: $primary-color;
+          background: #e8f3ff;
+          color: $primary-color;
+          font-weight: 500;
+
+          .dot {
+            background: $primary-color;
+          }
         }
       }
     }
@@ -96,12 +159,13 @@ async function handleLogout() {
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      box-shadow: $shadow-sm;
+      border-bottom: 1px solid $border-color;
       z-index: 10;
 
       .title {
         font-size: 16px;
         font-weight: 600;
+        color: $text-color;
       }
 
       .user-area {
@@ -109,8 +173,31 @@ async function handleLogout() {
         align-items: center;
         gap: 12px;
 
+        .avatar {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: $primary-color;
+          color: #fff;
+          font-size: 13px;
+          border-radius: 50%;
+        }
+
         .username {
-          color: $text-color-secondary;
+          font-size: 14px;
+          color: $text-color;
+        }
+
+        .login-btn {
+          height: 32px;
+          padding: 0 18px;
+        }
+
+        .logout-btn {
+          height: 32px;
+          padding: 0 14px;
         }
       }
     }
@@ -118,7 +205,8 @@ async function handleLogout() {
     .content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 20px 24px;
+      background: $bg-color;
     }
   }
 }

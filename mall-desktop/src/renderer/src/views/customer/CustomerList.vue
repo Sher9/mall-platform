@@ -1,16 +1,23 @@
 <template>
   <div class="customer-list">
-    <div class="toolbar card">
-      <div class="search">
-        <input v-model="query.name" placeholder="搜索客户名称" @keyup.enter="loadData" />
-        <button class="btn-primary" @click="loadData">查询</button>
-        <button class="btn-default" @click="resetQuery">重置</button>
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">客户管理</h1>
+        <p class="page-desc">查看与维护商城注册客户信息。</p>
       </div>
       <button class="btn-primary" @click="openDialog()">新增客户</button>
     </div>
 
-    <div class="table card">
-      <table>
+    <div class="card">
+      <div class="toolbar">
+        <div class="search">
+          <input v-model="query.name" placeholder="搜索客户名称" @keyup.enter="loadData" />
+          <button class="btn-primary" @click="loadData">查询</button>
+          <button class="btn-default" @click="resetQuery">重置</button>
+        </div>
+      </div>
+
+      <table class="data-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -18,7 +25,7 @@
             <th>昵称</th>
             <th>手机号</th>
             <th>状态</th>
-            <th>操作</th>
+            <th class="col-action">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -27,10 +34,14 @@
             <td>{{ item.username }}</td>
             <td>{{ item.nickname }}</td>
             <td>{{ item.phone }}</td>
-            <td>{{ item.status === 1 ? '正常' : '禁用' }}</td>
             <td>
-              <button class="btn-default btn-sm" @click="openDialog(item)">编辑</button>
-              <button class="btn-danger btn-sm" @click="handleDelete(item)">删除</button>
+              <span :class="['status-tag', item.status === 1 ? 'on' : 'off']">
+                {{ item.status === 1 ? '正常' : '禁用' }}
+              </span>
+            </td>
+            <td class="col-action">
+              <button class="btn-link" @click="openDialog(item)">编辑</button>
+              <button class="btn-link danger" @click="handleDelete(item)">删除</button>
             </td>
           </tr>
           <tr v-if="list.length === 0">
@@ -38,6 +49,7 @@
           </tr>
         </tbody>
       </table>
+
       <div class="pagination">
         <button class="btn-default btn-sm" :disabled="query.pageNum <= 1" @click="changePage(-1)">上一页</button>
         <span>第 {{ query.pageNum }} 页</span>
@@ -47,7 +59,7 @@
 
     <div v-if="dialogVisible" class="modal" @click.self="dialogVisible = false">
       <div class="modal-content card">
-        <h3>{{ editForm.customerId ? '编辑客户' : '新增客户' }}</h3>
+        <h3 class="modal-title">{{ editForm.customerId ? '编辑客户' : '新增客户' }}</h3>
         <div class="form-item">
           <label>用户名</label>
           <input v-model="editForm.username" placeholder="请输入用户名" />
@@ -130,91 +142,3 @@ async function handleDelete(item) {
 
 onMounted(loadData)
 </script>
-
-<style lang="scss" scoped>
-.customer-list {
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-
-    .search {
-      display: flex;
-      gap: 8px;
-      input { width: 240px; }
-    }
-  }
-
-  .table {
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      th, td {
-        padding: 10px 12px;
-        text-align: left;
-        border-bottom: 1px solid $border-color;
-      }
-      th {
-        background: $bg-color;
-        font-weight: 600;
-        color: $text-color-secondary;
-      }
-      .empty {
-        text-align: center;
-        color: $text-color-placeholder;
-        padding: 32px;
-      }
-    }
-    .pagination {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 16px;
-    }
-  }
-
-  .btn-sm {
-    padding: 4px 12px;
-    font-size: 12px;
-    margin-right: 4px;
-  }
-
-  .modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-
-    .modal-content {
-      width: 440px;
-      padding: 24px;
-      h3 { margin-bottom: 20px; }
-      .form-item {
-        margin-bottom: 16px;
-        label {
-          display: block;
-          margin-bottom: 6px;
-          color: $text-color-secondary;
-        }
-        select {
-          width: 100%;
-          padding: 8px 12px;
-          border: 1px solid $border-color;
-          border-radius: $radius-sm;
-        }
-      }
-      .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 20px;
-      }
-    }
-  }
-}
-</style>
